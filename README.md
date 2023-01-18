@@ -1,10 +1,14 @@
 # etoro-ado-kiszamolo
 Etoro magyar adózáshoz készített feldolgozó hobbyprojekt 
 
-# Telepítés
-## Manuális telepítés:
+# Működése
+* Beolvassa az MNB napi árfolyamos xlsx-jét. (Ha van eggyezés a napi árfolyammal azt használja, ha nincs akkor az előző érvényes napot)
+* Összesíti a napi árfolyamot külön Crypto és Egyéb (Stock)-okra (külön adózási szabályok érvényesek)
+* Összesíti az osztalékokat napi árfolyamon. (ahol 0% a tax, ott +15%-ot számít rá)
 
-Ubuntu :
+# Telepítés
+## Manuális telepítés (Ubuntu):
+
 * telpítsük a függőségeket :
 `apt install apache2 php php-xml`
 * Másoljuk a www mappa tartalmát a /var/www/html mappába.
