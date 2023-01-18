@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  solar-webserver:
+    container_name: webserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./../www:/var/www/html:Z
+    ports:
+      - "127.0.0.1:8000:80"
