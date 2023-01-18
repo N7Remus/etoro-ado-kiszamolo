@@ -28,3 +28,4 @@ https://adokiszamolo.sth.sze.hu/
 
 # Megjegyzés:
 Ez egy hobbyprojekt, így a generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.
+Amennyiben valaki hibát észlel kérem jellezze az issue-ban.
