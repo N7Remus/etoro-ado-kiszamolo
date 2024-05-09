@@ -30,7 +30,9 @@ https://adokiszamolo.sth.sze.hu/
 Ez egy hobbyprojekt, így a generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.
 
 Amennyiben valaki hibát észlel kérem jellezze issue-ban.
-# Változások
+# Változások a verziókban
 0.3 Az alakalmazás most már visszajelzi, hogy mikori árfolyam adatokkal dolgozunk, illetve a javítottam a formázáson.
+
 0.2 táblázatok finomítása
+
 0.1 kezdeti állapot
