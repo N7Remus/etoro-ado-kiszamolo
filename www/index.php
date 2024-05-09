@@ -5,7 +5,7 @@ require_once __DIR__ . '/SimpleXLSX.php';
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 set_time_limit(300);
 
-$version = "0.2";
+$version = "0.3";
 
 use Shuchkin\SimpleXLSX;
 
@@ -31,9 +31,13 @@ function convertToDate($date)
     return date('Y-m-d', strtotime($date));
 }
 
+function compare_date_keys($dt1, $dt2) {
+    return strtotime($dt1) - strtotime($dt2);
+}
 // Árfolyamadatok olvasása
 $arfolyam = [];
-if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
+$aktualis_szja = 0.15;
+if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
     $rows = $xlsx->rows();
     /*
     [0] => Dátum/ISO
@@ -42,6 +46,13 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
     for ($i = 2; $i < count($rows); $i++) {
         $arfolyam[convertToDate($rows[$i][0])] = $rows[$i][34];
     }
+    $a = array_keys($arfolyam);
+
+    usort($a, "compare_date_keys");
+    $f=reset($a);
+    $e=end($a);
+    echo "Elérhető árfolyamadatok $f -> $e <br>";
+    echo "Az SZJA értéke $aktualis_szja (". $aktualis_szja*100 ."%)";
 } else {
     echo SimpleXLSX::parseError();
 }
@@ -62,14 +73,21 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
     <script type="text/javascript" src="/js/vfs_fonts.js"></script>
     <script type="text/javascript" src="/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="/js/buttons.print.min.js"></script>
+
+
     <!-- our project just needs Font Awesome Solid + Brands -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/chartjs/chart.umd.js"></script>
+
+
 </head>
+
 
 <body>
     <div class="container">
+
+
         <header class="py-3 mb-3 border-bottom">
             <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr;">
 
@@ -131,11 +149,11 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
                                             $closed = $xlsx->rows(1);
                                             $divident = $xlsx->rows(3);
 
-                                            // [8] profit 
+                                            // [8] profit
                                             for ($i = 1; $i < count($closed); $i++) {
                                                 // profit per transaction
                                                 // var_dump($closed[$i][8]);
-                                                // Amount	Units	Open Date	Close Date	Leverage	Spread	Profit
+                                                // Amount       Units   Open Date       Close Date      Leverage       Spread   Profit
                                                 if ($closed[$i][15] == "Crypto") {
                                                     $crypto += getUSDInHUF($closed[$i][8], $closed[$i][5]);
                                                 } else {
@@ -163,15 +181,15 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
                                 </table>
                                 <hr>
                                 <p>
-                                    Stock bevétel (formázott) : <?= number_format($sum) ?> Ft
+                                    Stock bevétel (formázott) : <?= number_format($sum,2,"."," ") ?> Ft
                                     <br>
-                                    Stock veszteség (formázott) : <?= number_format($negsum) ?> Ft
+                                    Stock veszteség (formázott) : <?= number_format($negsum,2,"."," ") ?> Ft
                                     <br>
                                     Stock összesített bevétel : <?= $sum + $negsum ?> Ft
                                     <br>
-                                    Stock összesített bevétel (formázott) : <?= number_format($sum + $negsum) ?> Ft
+                                    Stock összesített bevétel (formázott) : <?= number_format($sum + $negsum,2,"."," ") ?> Ft
                                     <br>
-                                    Crypto bevétel (formázott) : <?= number_format($crypto) ?> Ft
+                                    Crypto bevétel (formázott) : <?= number_format($crypto,2,"."," ") ?> Ft
                                     <br>
                                     Crypto bevétel : <?= $crypto ?> Ft
                                 </p>
@@ -196,11 +214,11 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
                                             $sum2 = 0;
                                             $szja = 0;
                                             for ($i = 1; $i < count($divident); $i++) {
-                                                // profit - $divident[$i][2] 
-                                                // tax    - $divident[$i][3] 
+                                                // profit - $divident[$i][2]
+                                                // tax    - $divident[$i][3]
                                                 $sum2 += getUSDInHUF($divident[$i][2], $divident[$i][0]);
                                                 if ($divident[$i][3] == "0 %")
-                                                    $szja += getUSDInHUF($divident[$i][2], $divident[$i][0]) * 0.15;
+                                                    $szja += getUSDInHUF($divident[$i][2], $divident[$i][0]) * $aktualis_szja;
                                         ?>
                                             <tr>
                                                 <td><?= $divident[$i][0] ?></td>
@@ -219,11 +237,11 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
                                 </table>
                                 <hr>
                                 <p>
-                                    Kamatnyereség (formázott) : <?= number_format($sum2) ?> Ft
+                                    Kamatnyereség (formázott) : <?= number_format($sum2,2,"."," ") ?> Ft
                                     <br>
                                     Kamatnyereség : <?= $sum2 ?> Ft
                                     <br>
-                                    Fizetendő SZJA (formázott) : <?= number_format($szja) ?> Ft
+                                    Fizetendő SZJA (formázott) : <?= number_format($szja,2,"."," ") ?> Ft
                                     <br>
                                     Fizetendő SZJA : <?= $szja ?> Ft
                                 </p>
