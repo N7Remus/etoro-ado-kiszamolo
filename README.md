@@ -1,11 +1,20 @@
 # etoro-ado-kiszamolo
-Etoro magyar adózáshoz készített feldolgozó hobbyprojekt 
-
+Ez az alkalmazás egy feldolgozó hobbyprojek, mely az eToro platformon keresztüli tözsdézés, magyarországi adózásának megkönnyítésére készült.
 # Működése
 * Beolvassa az MNB napi árfolyamos xlsx-jét. (Ha van eggyezés a napi árfolyammal azt használja, ha nincs akkor az előző érvényes napot)
 * Összesíti a napi árfolyamot külön Crypto és Egyéb (Stock)-okra (külön adózási szabályok érvényesek)
-* Összesíti az osztalékokat napi árfolyamon. (ahol 0% a tax, ott +15%-ot számít rá)
+* Összesíti az osztalékokat napi árfolyamon. (ahol 15%< a tax, ott +15%-ot számít rá)
 * Az átváltott napiárfolyam értékeket csv vagy xlsx (excel) formátumban lehet a böngészőből exportálni.
+
+
+# Használata
+* Az etoro account statement menüpontból lehet exportálni egy xlsx fájlt adott időszakra.
+* A exportált fájlt az oldalon lehet csatolni. 
+* Az kiszámoló elvégzi a napi árfolyamváltásokat.
+* Illetve, összesítőket készít az előre megadott SZJA értékekkel. (ezen értékek változhatnak)
+
+# Demo:
+https://adokiszamolo.sth.sze.hu/
 
 # Telepítés
 ## Manuális telepítés (Ubuntu):
@@ -17,14 +26,6 @@ Etoro magyar adózáshoz készített feldolgozó hobbyprojekt
 * Opcionálisan SSL tanusítvány telepítése.
 * Teszteljük!
 
-# Használata
-* Az etoro account statement menüpontból lehet exportálni egy xlsx fájlt adott időszakra.
-* A exportált fájlt az oldalon lehet csatolni. 
-* Az kiszámoló elvégzi a napi árfolyamváltásokat.
-* Illetve, összesítőket készít az előre megadott SZJA értékekkel. (ezen értékek változhatnak)
-
-# Demo:
-https://adokiszamolo.sth.sze.hu/
 
 # Megjegyzés:
 Ez egy hobbyprojekt, így a generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.
