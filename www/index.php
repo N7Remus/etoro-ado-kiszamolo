@@ -5,7 +5,7 @@ require_once __DIR__ . '/SimpleXLSX.php';
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 set_time_limit(300);
 
-$version = "0.3";
+$version = "0.3.1";
 
 use Shuchkin\SimpleXLSX;
 
@@ -62,7 +62,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
 <html>
 
 <head>
-    <title>etoro-ado-kiszamolo (<?= $version ?>)</title>
+    <title>Etoro adó kiszamoló (<?= $version ?>)</title>
     <script src="/js/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/css/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/buttons.dataTables.min.css" />
@@ -85,7 +85,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
 
 
 <body>
-    <div class="container">
+    <div class="">
 
 
         <header class="py-3 mb-3 border-bottom">
@@ -122,7 +122,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
         ?>
                     <div class="container-fluid ">
                         <div class="d-grid gap-3 " style="grid-template-columns: 1fr 1fr;">
-                            <div class="bg-light border rounded-3">
+                            <div class="bg-light border rounded-3 p-2">
                             <h2 class="display-6 py-3" style="text-align:center">Tranzakció(k)</h2>
 
                                 <table id="example" class="table table-striped " style="width:100%">
@@ -195,7 +195,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
                                 </p>
 
                             </div>
-                            <div class="bg-light border rounded-3">
+                            <div class="bg-light border rounded-3 p-2">
                             <h2 class="display-6 py-3" style="text-align:center">Osztalék(ok)</h2>
 
                                 <table id="example2" class="table table-striped" style="width:100%">
@@ -217,7 +217,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
                                                 // profit - $divident[$i][2]
                                                 // tax    - $divident[$i][3]
                                                 $sum2 += getUSDInHUF($divident[$i][2], $divident[$i][0]);
-                                                if ($divident[$i][3] == "0 %")
+                                                if (intval(trim(str_replace("%","",$divident[$i][3])))<=15 )
                                                     $szja += getUSDInHUF($divident[$i][2], $divident[$i][0]) * $aktualis_szja;
                                         ?>
                                             <tr>
@@ -279,6 +279,14 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
             });
         </script>
     </div>
+    <div class="container">
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="https://github.com/N7Remus/etoro-ado-kiszamolo" class="nav-link px-2 text-body-secondary">Az oldal forrása és dokumentációja elérhető a Github-on</a></li>
+    </ul>
+    <p class="text-center text-body-secondary">Ez Etoro magyar adózáshoz készített feldolgozó hobbyprojek. <br>A generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.</p>
+  </footer>
+</div>
 </body>
 
 </html>
