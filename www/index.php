@@ -217,7 +217,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
                                                 // profit - $divident[$i][2]
                                                 // tax    - $divident[$i][3]
                                                 $sum2 += getUSDInHUF($divident[$i][2], $divident[$i][0]);
-                                                if (intval(trim(str_replace("%","",$divident[$i][3])))<=15 )
+                                                if (intval(trim(str_replace("%","",$divident[$i][3])))<15 )
                                                     $szja += getUSDInHUF($divident[$i][2], $divident[$i][0]) * $aktualis_szja;
                                         ?>
                                             <tr>
