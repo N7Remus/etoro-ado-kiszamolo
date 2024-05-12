@@ -31,6 +31,8 @@ Ez egy hobbyprojekt, így a generált adatok esetleges hibáiért/tévességéé
 
 Amennyiben valaki hibát észlel kérem jellezze issue-ban.
 # Változások a verziókban
+0.3.1 Az SZJA számolás csak a 0%-os adót tartalmazó sorokra érvényesült, most már  15%-nál kissebb is összegződik.
+
 0.3 Az alakalmazás most már visszajelzi, hogy mikori árfolyam adatokkal dolgozunk, illetve a javítottam a formázáson.
 
 0.2 táblázatok finomítása
