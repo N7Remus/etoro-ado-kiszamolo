@@ -14,7 +14,7 @@ Ez az alkalmazás egy feldolgozó hobbyprojek, mely az eToro platformon kereszt�
 * Illetve, összesítőket készít az előre megadott SZJA értékekkel. (ezen értékek változhatnak)
 
 # Demo:
-https://adokiszamolo.sth.sze.hu/
+~~https://adokiszamolo.sth.sze.hu/~~
 
 # Telepítés
 ## Manuális telepítés (Ubuntu):
@@ -26,12 +26,20 @@ https://adokiszamolo.sth.sze.hu/
 * Opcionálisan SSL tanusítvány telepítése.
 * Teszteljük!
 
+## Docker:
+``` 
+cd setup
+docker compose up
+```
+
 
 # Megjegyzés:
 Ez egy hobbyprojekt, így a generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.
 
 Amennyiben valaki hibát észlel kérem jellezze issue-ban.
 # Változások a verziókban
+0.3.2 2024-es táblázat frissítve. Az Etoro exportban megváltoztatták a fájl fejléceket->dinamikus parse (Profit, Close date és Type mezőkre). Dockerfile javítás.
+
 0.3.1 Az SZJA számolás csak a 0%-os adót tartalmazó sorokra érvényesült, most már  15%-nál kissebb is összegződik.
 
 0.3 Az alakalmazás most már visszajelzi, hogy mikori árfolyam adatokkal dolgozunk, illetve a javítottam a formázáson.

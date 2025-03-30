@@ -5,10 +5,24 @@ require_once __DIR__ . '/SimpleXLSX.php';
 ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 set_time_limit(300);
 
-$version = "0.3.1";
+$version = "0.3.2";
 
 use Shuchkin\SimpleXLSX;
 
+if (!function_exists('str_contains')) {
+    /**
+     * Check if substring is contained in string
+     *
+     * @param $haystack
+     * @param $needle
+     *
+     * @return bool
+     */
+    function str_contains($haystack, $needle)
+    {
+        return (strpos($haystack, $needle) !== false);
+    }
+}
 function getUSDInHUF($usd, $d)
 {
     $d = str_replace("/", "-", $d);
@@ -37,7 +51,7 @@ function compare_date_keys($dt1, $dt2) {
 // Árfolyamadatok olvasása
 $arfolyam = [];
 $aktualis_szja = 0.15;
-if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
+if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes.xlsx')) {
     $rows = $xlsx->rows();
     /*
     [0] => Dátum/ISO
@@ -148,16 +162,41 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
 
                                             $closed = $xlsx->rows(1);
                                             $divident = $xlsx->rows(3);
+                                            $dynamic_Profit_column = 8; // Profit / Profit(USD)
+                                            $dynamic_Open_column = 4; // Close Date
+                                            $dynamic_Close_column = 5; // Close Date
+                                            $dynamic_Type_column = 15; // Close Date
+                                            
+                                            // dinamikus field keresés, megváltozott az exportált fájl mező sorrendje
+                                            foreach ($closed[0] as $key => $value) {
+                                                if (str_contains($value, 'Profit')) {
+                                                    $dynamic_Profit_column = $key; // Profit / Profit(USD)
+                                            
+                                                }
+                                                if (str_contains($value, 'Close Date')) {
+                                                    $dynamic_Close_column = $key; // Close Date
+                                                }
+                                                if (str_contains($value, 'Type')) {
+                                                    $dynamic_Type_column = $key; // Close Date
+                                                }
+
+                                                if (str_contains($value, 'Open Date')) {
+                                                    $dynamic_Open_column = $key; // Close Date
+                                                }
+                                                
+                                            }
+                                            
 
                                             // [8] profit
                                             for ($i = 1; $i < count($closed); $i++) {
                                                 // profit per transaction
                                                 // var_dump($closed[$i][8]);
                                                 // Amount       Units   Open Date       Close Date      Leverage       Spread   Profit
-                                                if ($closed[$i][15] == "Crypto") {
-                                                    $crypto += getUSDInHUF($closed[$i][8], $closed[$i][5]);
+
+                                                if ($closed[$i][$dynamic_Type_column] == "Crypto") {
+                                                    $crypto += getUSDInHUF($closed[$i][$dynamic_Profit_column], $closed[$i][$dynamic_Close_column]);
                                                 } else {
-                                                    $s = getUSDInHUF($closed[$i][8], $closed[$i][5]);
+                                                    $s = getUSDInHUF($closed[$i][$dynamic_Profit_column], $closed[$i][$dynamic_Close_column]);
                                                     if ($s < 0) {
                                                         $negsum += $s;
                                                     } else {
@@ -168,10 +207,10 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
                                                 <tr>
                                                     <td><?= $closed[$i][0] ?></td>
                                                     <td><?= $closed[$i][1] ?></td>
-                                                    <td><?= $closed[$i][4] ?></td>
-                                                    <td><?= $closed[$i][5] ?></td>
-                                                    <td><?= $closed[$i][8] ?></td>
-                                                    <td><?= getUSDInHUF($closed[$i][8], $closed[$i][5]); ?></td>
+                                                    <td><?= $closed[$i][$dynamic_Open_column] ?></td>
+                                                    <td><?= $closed[$i][$dynamic_Close_column] ?></td>
+                                                    <td><?= $closed[$i][$dynamic_Profit_column] ?></td>
+                                                    <td><?= getUSDInHUF($closed[$i][$dynamic_Profit_column], $closed[$i][$dynamic_Close_column]); ?></td>
                                                 </tr>
                                             <?php
                                             }
@@ -217,6 +256,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
                                                 // profit - $divident[$i][2]
                                                 // tax    - $divident[$i][3]
                                                 $sum2 += getUSDInHUF($divident[$i][2], $divident[$i][0]);
+
                                                 if (intval(trim(str_replace("%","",$divident[$i][3])))<15 )
                                                     $szja += getUSDInHUF($divident[$i][2], $divident[$i][0]) * $aktualis_szja;
                                         ?>
@@ -284,7 +324,7 @@ if ($xlsx = SimpleXLSX::parse('arfolyam-letoltes21-2023.xlsx')) {
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
       <li class="nav-item"><a href="https://github.com/N7Remus/etoro-ado-kiszamolo" class="nav-link px-2 text-body-secondary">Az oldal forrása és dokumentációja elérhető a Github-on</a></li>
     </ul>
-    <p class="text-center text-body-secondary">Ez Etoro magyar adózáshoz készített feldolgozó hobbyprojek. <br>A generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.</p>
+    <p class="text-center text-body-secondary">Ez az Etoro alaklmazás magyar adózáshoz készített feldolgozó hobbyprojek. <br>A generált adatok esetleges hibáiért/tévességéért semmilyen jellegű felelősséget nem vállalok.</p>
   </footer>
 </div>
 </body>

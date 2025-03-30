@@ -5,6 +5,6 @@ RUN apt-get update
 RUN apt-get install -y \
         libzip-dev \
         zip \
-        libpng-dev
+        libpng-dev libxml2-dev
 RUN docker-php-ext-install pdo_mysql zip gettext gd mysqli pdo xml
 #RUN a2enmod rewrite
